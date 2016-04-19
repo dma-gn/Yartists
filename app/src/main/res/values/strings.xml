@@ -3,5 +3,7 @@
 
     <string name="artists">Исполнители</string>
 
+    <string name="item_albums">альбом</string>
+    <string name="item_tracks">песен</string>
 
 </resources>
