@@ -29,5 +29,6 @@ dependencies {
 
     compile 'com.fasterxml.jackson.core:jackson-databind:2.7.2'
     compile 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
-
+    compile 'jp.wasabeef:recyclerview-animators:2.2.1'
+    compile 'com.jakewharton:disklrucache:2.0.2'
 }

@@ -1,11 +1,6 @@
 package com.dma.yartists.adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,8 +11,9 @@ import android.widget.TextView;
 
 import com.dma.yartists.R;
 import com.dma.yartists.dto.Artist;
+import com.dma.yartists.task.DownloadImageTask;
+import com.dma.yartists.util.ApplicationConstants;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,8 +76,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ArtistViewHolder> 
     @Override
     public ArtistViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item, viewGroup, false);
-        ArtistViewHolder aph = new ArtistViewHolder(v,context);
-        return aph;
+        return new ArtistViewHolder(v,context);
     }
 
     @Override
@@ -97,7 +92,8 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ArtistViewHolder> 
         artistViewHolder.artistDescription.setText(albums + ", " + tracks);
         artistViewHolder.artistGenres.setText(artists.get(i).implode(artists.get(i).getGenres()));
 
-        new DownloadImageTask(artistViewHolder.artistPhoto).execute(artists.get(i).getCover().getSmall());
+        String cacheFileName = ApplicationConstants.THUMB_PREFIX + String.valueOf(artists.get(i).getId());
+        new DownloadImageTask(artistViewHolder.artistPhoto, cacheFileName).execute(artists.get(i).getCover().getSmall());
     }
 
     @Override
@@ -105,26 +101,4 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ArtistViewHolder> 
         return artists.size();
     }
 
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
-
-        public DownloadImageTask(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-        protected Bitmap doInBackground(String... urls) {
-            String url = urls[0];
-            Bitmap mIcon = null;
-            try {
-                InputStream in = new java.net.URL(url).openStream();
-                mIcon = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return mIcon;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
-        }
-    }
 }
