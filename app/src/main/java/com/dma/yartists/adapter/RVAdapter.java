@@ -1,6 +1,7 @@
 package com.dma.yartists.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dma.yartists.R;
+import com.dma.yartists.activity.ArtistDetailActivity;
 import com.dma.yartists.dto.Artist;
 import com.dma.yartists.task.DownloadImageTask;
 import com.dma.yartists.util.ApplicationConstants;
@@ -20,7 +22,7 @@ import java.util.List;
 
 public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ArtistViewHolder>  {
 
-    public static class ArtistViewHolder extends RecyclerView.ViewHolder {
+    public static class ArtistViewHolder extends RecyclerView.ViewHolder implements android.view.View.OnClickListener {
 
         CardView cv;
         TextView artistName;
@@ -48,8 +50,17 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ArtistViewHolder> 
             artistGenres = (TextView)itemView.findViewById(R.id.artist_genres);
             artistPhoto = (ImageView)itemView.findViewById(R.id.artist_photo);
             artistDescription = (TextView)itemView.findViewById(R.id.artist_albums_and_tracks);
+
+            itemView.setOnClickListener(this);
         }
 
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(ctx, ArtistDetailActivity.class);
+            intent.putExtra(ApplicationConstants.POSITION, position);
+
+            ctx.startActivity(intent);
+        }
     }
 
     Context context;

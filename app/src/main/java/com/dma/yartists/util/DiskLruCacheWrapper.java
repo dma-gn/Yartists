@@ -8,7 +8,6 @@ import com.jakewharton.disklrucache.DiskLruCache;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -48,7 +47,6 @@ public class DiskLruCacheWrapper {
         this.valueCount = valueCount;
         this.cacheDiskSize = maxSize;
         new InitDiskCacheTask().execute(cacheDir);
-//        mDiskLruCache = DiskLruCache.open(dir, appVersion, 2, maxSize);
     }
 
     public InputStream getInputStreamFromDiskCache(String key) throws IOException {
@@ -71,7 +69,7 @@ public class DiskLruCacheWrapper {
                 DiskLruCache.Editor editor = null;
                 try {
                     editor = mDiskLruCache.edit(key);
-                    OutputStream out = new BufferedOutputStream(editor.newOutputStream(0), ApplicationConstants.MEM_CACHE_SIZE);
+                    OutputStream out = new BufferedOutputStream(editor.newOutputStream(0), ApplicationConstants.CACHE_DISK_SIZE);
                     byte[] buf = new byte[1024];
                     int len;
                     while((len=inputStream.read(buf)) != -1){
@@ -125,7 +123,7 @@ public class DiskLruCacheWrapper {
                 }
             }
             if (mDiskLruCache != null && mDiskLruCache.size() != 0 && mDiskLruCache.get(key) != null) {
-                Bitmap bitmap = BitmapFactory.decodeStream(mDiskLruCache.get(key).getInputStream(0));
+                Bitmap bitmap = BitmapFactory.decodeStream(mDiskLruCache.get(key).getInputStream(VALUE_IDX));
                 addBitmapToCache(key, bitmap);
                 return  bitmap;
             }
@@ -133,12 +131,12 @@ public class DiskLruCacheWrapper {
         return null;
     }
 
-    private boolean writeBitmapToFile( Bitmap bitmap, DiskLruCache.Editor editor)
+    private boolean writeBitmapToFile(Bitmap bitmap, DiskLruCache.Editor editor)
             throws IOException {
         OutputStream out = null;
         try {
-            out = new BufferedOutputStream(editor.newOutputStream(0), ApplicationConstants.MEM_CACHE_SIZE);
-            return bitmap.compress( Bitmap.CompressFormat.JPEG, 70, out );
+            out = new BufferedOutputStream(editor.newOutputStream(VALUE_IDX), ApplicationConstants.CACHE_DISK_SIZE);
+            return bitmap.compress(Bitmap.CompressFormat.JPEG, 70, out);
         } finally {
             if ( out != null ) {
                 out.close();

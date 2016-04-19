@@ -2,6 +2,7 @@
     <string name="app_name">Яндекс.Исполнители</string>
 
     <string name="artists">Исполнители</string>
+    <string name="biography">Биография</string>
 
     <string name="item_albums">альбом</string>
     <string name="item_tracks">песен</string>

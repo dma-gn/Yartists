@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        >
+
+        <include layout="@layout/toolbar"/>
+
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/artist_photo"
+            android:layout_alignParentTop="true"
+            android:adjustViewBounds="true"
+            android:layout_below="@+id/toolbar"
+            android:layout_marginTop="?attr/actionBarSize"
+            />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:background="#FFF"
+            android:layout_below="@+id/artist_photo">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/artist_genres"
+                android:layout_marginBottom="10dp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/artist_albums_and_traks"
+                android:layout_below="@+id/artist_genres"
+                android:layout_marginBottom="10dp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/biography"
+                android:id="@+id/artist_biography"
+                android:layout_below="@+id/artist_albums_and_traks"
+                android:textColor="@color/colorPrimaryText"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/artist_albums_and_tracks"
+                android:layout_below="@+id/artist_biography"
+                android:textColor="@color/colorPrimaryText"
+                android:layout_marginBottom="10dp"
+                />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+</ScrollView>
