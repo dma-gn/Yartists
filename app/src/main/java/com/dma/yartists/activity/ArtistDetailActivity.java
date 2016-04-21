@@ -12,6 +12,7 @@ import com.dma.yartists.R;
 import com.dma.yartists.dto.Artist;
 import com.dma.yartists.task.DownloadImageTask;
 import com.dma.yartists.util.ApplicationConstants;
+import com.dma.yartists.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,10 +50,14 @@ public class ArtistDetailActivity extends Activity {
 
 
         String albums = artist.getAlbums() + " " +
-                getBaseContext().getString(R.string.item_albums);
+                getBaseContext().getString(new Utils().pluralize(artist.getAlbums(),
+                        R.string.item_albums_singular,R.string.item_albums_plural,
+                        R.string.item_albums_plural_perfect));
 
         String tracks = artist.getTracks() + " " +
-                getBaseContext().getString(R.string.item_tracks);
+                getBaseContext().getString(new Utils().pluralize(artist.getTracks(),
+                        R.string.item_tracks_singular,R.string.item_tracks_plural,
+                        R.string.item_tracks_plural_perfect));
 
         textViewArtistAlbumsAndTracks.setText(albums + " - " + tracks);
         textViewArtistGenres.setText(artist.implode(artist.getGenres()));

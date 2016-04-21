@@ -4,7 +4,11 @@
     <string name="artists">Исполнители</string>
     <string name="biography">Биография</string>
 
-    <string name="item_albums">альбом</string>
-    <string name="item_tracks">песен</string>
 
+    <string name="item_albums_singular">альбом</string>
+    <string name="item_albums_plural">альбома</string>
+    <string name="item_albums_plural_perfect">альбомов</string>
+    <string name="item_tracks_singular">песеня</string>
+    <string name="item_tracks_plural">песени</string>
+    <string name="item_tracks_plural_perfect">песен</string>
 </resources>

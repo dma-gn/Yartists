@@ -16,6 +16,7 @@ import com.dma.yartists.adapter.RVAdapter;
 import com.dma.yartists.dto.Artist;
 import com.dma.yartists.util.ApplicationConstants;
 import com.dma.yartists.util.DiskLruCacheWrapper;
+import com.dma.yartists.util.Utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jakewharton.disklrucache.DiskLruCache;
 
@@ -115,18 +116,10 @@ public class MainActivity extends Activity {
     }
 
     private void initializeDiskCache(){
-        File cacheDir = getDiskCacheDir(this, "images");
+        File cacheDir = new Utils().getDiskCacheDir(this, "images");
         diskLruCacheWrapper = new DiskLruCacheWrapper(cacheDir, ApplicationConstants.VERSION, 1,
                 Long.valueOf(ApplicationConstants.CACHE_DISK_SIZE));
 
     }
 
-    public static File getDiskCacheDir(Context context, String folderName) {
-        final String cachePath =
-                Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) ?
-                        context.getExternalCacheDir().getPath() :
-                        context.getCacheDir().getPath();
-
-        return new File(cachePath + File.separator + folderName);
-    }
 }

@@ -2,6 +2,7 @@ package com.dma.yartists.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import com.dma.yartists.activity.ArtistDetailActivity;
 import com.dma.yartists.dto.Artist;
 import com.dma.yartists.task.DownloadImageTask;
 import com.dma.yartists.util.ApplicationConstants;
+import com.dma.yartists.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +24,7 @@ import java.util.List;
 
 public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ArtistViewHolder>  {
 
-    public static class ArtistViewHolder extends RecyclerView.ViewHolder implements android.view.View.OnClickListener {
+    public static class ArtistViewHolder extends RecyclerView.ViewHolder implements android.view.View.OnClickListener, android.view.View.OnLongClickListener {
 
         CardView cv;
         TextView artistName;
@@ -61,6 +63,15 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ArtistViewHolder> 
 
             ctx.startActivity(intent);
         }
+
+        @Override
+        public boolean onLongClick(View v) {
+            Intent viewIntent =
+                    new Intent("android.intent.action.VIEW",
+                            Uri.parse(artist.getLink()));
+            ctx.startActivity(viewIntent);
+            return true;
+        }
     }
 
     Context context;
@@ -95,11 +106,17 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ArtistViewHolder> 
         artistViewHolder.setArtist(artists.get(i));
         artistViewHolder.setPosition(i);
         artistViewHolder.artistName.setText(artists.get(i).getName());
+
         String albums = artists.get(i).getAlbums() + " " +
-                context.getString(R.string.item_albums);
+                context.getString(new Utils().pluralize(artists.get(i).getAlbums(),
+                        R.string.item_albums_singular,R.string.item_albums_plural,
+                        R.string.item_albums_plural_perfect));
 
         String tracks = artists.get(i).getTracks() + " " +
-                context.getString(R.string.item_tracks);
+                context.getString(new Utils().pluralize(artists.get(i).getTracks(),
+                        R.string.item_tracks_singular,R.string.item_tracks_plural,
+                        R.string.item_tracks_plural_perfect));
+
         artistViewHolder.artistDescription.setText(albums + ", " + tracks);
         artistViewHolder.artistGenres.setText(artists.get(i).implode(artists.get(i).getGenres()));
 
