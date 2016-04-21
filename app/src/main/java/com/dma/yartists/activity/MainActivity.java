@@ -1,10 +1,12 @@
 package com.dma.yartists.activity;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -28,6 +30,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
+
 
 public class MainActivity extends Activity {
 
@@ -37,6 +41,8 @@ public class MainActivity extends Activity {
     private RVAdapter adapter;
     private RecyclerView recyclerView;
     private Toast toast;
+    private ProgressDialog loading;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public static DiskLruCache mDiskLruCache;
     public static final Object mDiskCacheLock = new Object();
@@ -50,10 +56,15 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(LAYOUT);
 
+        String loadingTitle = this.getBaseContext().getString(R.string.loading_title);
+        String loadingContent = this.getBaseContext().getString(R.string.loading_content);
+        loading = ProgressDialog.show(this,loadingTitle,loadingContent,false,false);
+
         initializeDiskCache();
         initializeToolBar();
         initializeRecyclerView();
         initializeAdapter();
+        initializeSwipeRefresh();
 
         toast = Toast.makeText(getApplicationContext(),"",Toast.LENGTH_LONG);
     }
@@ -73,7 +84,12 @@ public class MainActivity extends Activity {
 
     private void initializeAdapter(){
         adapter = new RVAdapter(this);
-        recyclerView.setAdapter(adapter);
+        AlphaInAnimationAdapter alphaAdapter = new AlphaInAnimationAdapter(adapter);
+        alphaAdapter.setInterpolator(new OvershootInterpolator());
+        alphaAdapter.setFirstOnly(false);
+        alphaAdapter.setDuration(2000);
+        recyclerView.setAdapter(alphaAdapter);
+        loading.onStart();
         new ArtistAsyncTask().execute();
     }
 
@@ -112,14 +128,35 @@ public class MainActivity extends Activity {
             adapter.notifyItemRangeChanged(0, adapter.getArtists().size());
             adapter.setArtists(artists);
             adapter.notifyDataSetChanged();
+            loading.cancel();
+            swipeRefreshLayout.setRefreshing(false);
         }
+    }
+
+    private void initializeSwipeRefresh() {
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                File dir = mDiskLruCache.getDirectory();
+                long maxSize = mDiskLruCache.getMaxSize();
+                try {
+                    mDiskLruCache.delete();
+                    mDiskLruCache = DiskLruCache.open(dir, ApplicationConstants.VERSION, 2, maxSize);
+                } catch (IOException e) {
+                    toast.setText(e.getMessage());
+                    toast.show();
+                    e.printStackTrace();
+                }
+                new ArtistAsyncTask().execute();
+            }
+        });
     }
 
     private void initializeDiskCache(){
         File cacheDir = new Utils().getDiskCacheDir(this, "images");
         diskLruCacheWrapper = new DiskLruCacheWrapper(cacheDir, ApplicationConstants.VERSION, 1,
                 Long.valueOf(ApplicationConstants.CACHE_DISK_SIZE));
-
     }
 
 }

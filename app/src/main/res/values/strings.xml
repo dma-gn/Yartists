@@ -3,7 +3,8 @@
 
     <string name="artists">Исполнители</string>
     <string name="biography">Биография</string>
-
+    <string name="loading_title">Запрашиваем данные</string>
+    <string name="loading_content">Пожалуйста подождите...</string>
 
     <string name="item_albums_singular">альбом</string>
     <string name="item_albums_plural">альбома</string>
