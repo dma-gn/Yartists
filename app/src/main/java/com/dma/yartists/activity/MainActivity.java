@@ -135,14 +135,18 @@ public class MainActivity extends Activity {
 
     private void initializeSwipeRefresh() {
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
+        swipeRefreshLayout.setColorSchemeResources(
+                R.color.refresh_color_first,
+                R.color.refresh_color_second,
+                R.color.refresh_color_third);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                File dir = mDiskLruCache.getDirectory();
-                long maxSize = mDiskLruCache.getMaxSize();
+                File dir = DiskLruCacheWrapper.mDiskLruCache.getDirectory();
+                long maxSize = DiskLruCacheWrapper.mDiskLruCache.getMaxSize();
                 try {
-                    mDiskLruCache.delete();
-                    mDiskLruCache = DiskLruCache.open(dir, ApplicationConstants.VERSION, 2, maxSize);
+                    DiskLruCacheWrapper.mDiskLruCache.delete();
+                    DiskLruCacheWrapper.mDiskLruCache = DiskLruCache.open(dir, ApplicationConstants.VERSION, 1, maxSize);
                 } catch (IOException e) {
                     toast.setText(e.getMessage());
                     toast.show();

@@ -4,4 +4,9 @@
     <color name="colorPrimaryDark">#7F67B6</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorPrimaryText">#000</color>
+
+    <color name="refresh_color_first">#AAA</color>
+    <color name="refresh_color_second">#FA0B00</color>
+    <color name="refresh_color_third">#A5C94B</color>
+    <color name="refresh_color_">#FFCC00</color>
 </resources>
