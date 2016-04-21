@@ -138,7 +138,8 @@ public class MainActivity extends Activity {
         swipeRefreshLayout.setColorSchemeResources(
                 R.color.refresh_color_first,
                 R.color.refresh_color_second,
-                R.color.refresh_color_third);
+                R.color.refresh_color_third,
+                R.color.refresh_color_fourth);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
