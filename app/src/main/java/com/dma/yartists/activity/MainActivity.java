@@ -1,12 +1,10 @@
 package com.dma.yartists.activity;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -14,7 +12,7 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.Toast;
 
 import com.dma.yartists.R;
-import com.dma.yartists.adapter.RVAdapter;
+import com.dma.yartists.adapter.ArtistsRecyclerViewAdapter;
 import com.dma.yartists.dto.Artist;
 import com.dma.yartists.util.ApplicationConstants;
 import com.dma.yartists.util.DiskLruCacheWrapper;
@@ -33,13 +31,13 @@ import java.util.List;
 import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
     private static final int LAYOUT = R.layout.activity_main;
 
     private Toolbar toolbar;
-    private RVAdapter adapter;
-    private RecyclerView recyclerView;
+    private ArtistsRecyclerViewAdapter adapter;
+    public static RecyclerView recyclerView;
     private Toast toast;
     private ProgressDialog loading;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -83,7 +81,7 @@ public class MainActivity extends Activity {
     }
 
     private void initializeAdapter(){
-        adapter = new RVAdapter(this);
+        adapter = new ArtistsRecyclerViewAdapter(this);
         AlphaInAnimationAdapter alphaAdapter = new AlphaInAnimationAdapter(adapter);
         alphaAdapter.setInterpolator(new OvershootInterpolator());
         alphaAdapter.setFirstOnly(false);
@@ -161,7 +159,7 @@ public class MainActivity extends Activity {
     private void initializeDiskCache(){
         File cacheDir = new Utils().getDiskCacheDir(this, "images");
         diskLruCacheWrapper = new DiskLruCacheWrapper(cacheDir, ApplicationConstants.VERSION, 1,
-                Long.valueOf(ApplicationConstants.CACHE_DISK_SIZE));
+                ApplicationConstants.CACHE_DISK_SIZE);
     }
 
 }

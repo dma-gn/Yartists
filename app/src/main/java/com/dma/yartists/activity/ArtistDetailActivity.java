@@ -1,35 +1,31 @@
 package com.dma.yartists.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.dma.yartists.R;
+import com.dma.yartists.adapter.ArtistsFragmentPagerAdapter;
 import com.dma.yartists.dto.Artist;
-import com.dma.yartists.task.DownloadImageTask;
 import com.dma.yartists.util.ApplicationConstants;
-import com.dma.yartists.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by dma on 20.04.2016.
- */
-public class ArtistDetailActivity extends Activity {
+public class ArtistDetailActivity extends AppCompatActivity {
 
     private static final int LAYOUT = R.layout.activity_artist_details;
     private Toolbar toolbar;
-    private List<Artist> artists = new ArrayList<Artist>();
+    private List<Artist> artists = new ArrayList<>();
 
-    ImageView imageViewArtistPhoto;
-    TextView textViewArtistAlbumsAndTracks;
-    TextView textViewArtistGenres;
-    TextView textViewArtistDescription;
+    private ArtistsFragmentPagerAdapter pagerAdapter;
+
+    private ViewPager viewPager;
+
+    private int rvPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,32 +33,9 @@ public class ArtistDetailActivity extends Activity {
         setContentView(LAYOUT);
         artists = MainActivity.artists;
         Intent intent = getIntent();
-        Artist artist = artists.get(intent.getIntExtra(ApplicationConstants.POSITION,0));
-        initializeData(intent,artist);
-        initializeToolBar(artist.getName());
-    }
-
-    private void initializeData(Intent intent, Artist artist) {
-        textViewArtistAlbumsAndTracks = (TextView) findViewById(R.id.artist_albums_and_traks);
-        textViewArtistGenres = (TextView) findViewById(R.id.artist_genres);
-        textViewArtistDescription = (TextView) findViewById(R.id.artist_albums_and_tracks);
-        imageViewArtistPhoto = (ImageView) findViewById(R.id.artist_photo);
-
-
-        String albums = artist.getAlbums() + " " +
-                getBaseContext().getString(new Utils().pluralize(artist.getAlbums(),
-                        R.string.item_albums_singular,R.string.item_albums_plural,
-                        R.string.item_albums_plural_perfect));
-
-        String tracks = artist.getTracks() + " " +
-                getBaseContext().getString(new Utils().pluralize(artist.getTracks(),
-                        R.string.item_tracks_singular,R.string.item_tracks_plural,
-                        R.string.item_tracks_plural_perfect));
-
-        textViewArtistAlbumsAndTracks.setText(albums + " - " + tracks);
-        textViewArtistGenres.setText(artist.implode(artist.getGenres()));
-        textViewArtistDescription.setText(artist.getDescription());
-        new DownloadImageTask(imageViewArtistPhoto,String.valueOf(artist.getId())).execute(artist.getCover().getBig());
+        rvPosition = intent.getIntExtra(ApplicationConstants.POSITION,0);
+        initializeToolBar(artists.get(rvPosition).getName());
+        initializeFragment();
 
     }
 
@@ -73,7 +46,33 @@ public class ArtistDetailActivity extends Activity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                MainActivity.recyclerView.scrollToPosition(rvPosition);
                 finish();
+            }
+        });
+    }
+
+    private void initializeFragment() {
+        pagerAdapter = new ArtistsFragmentPagerAdapter(getSupportFragmentManager(),artists);
+        viewPager = (ViewPager) findViewById(R.id.container);
+        viewPager.setAdapter(pagerAdapter);
+        viewPager.setCurrentItem(rvPosition);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                toolbar.setTitle(artists.get(position).getName());
+                rvPosition = position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
             }
         });
     }

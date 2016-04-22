@@ -1,6 +1,9 @@
 package com.dma.yartists.dto;
 
-public class Artist {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Artist implements Parcelable {
     private long id;
     private String name;
     private String[] genres;
@@ -11,6 +14,44 @@ public class Artist {
     private Cover cover;
 
     public Artist() {
+    }
+
+    protected Artist(Parcel in) {
+        id = in.readLong();
+        name = in.readString();
+        genres = in.createStringArray();
+        link = in.readString();
+        tracks = in.readInt();
+        albums = in.readInt();
+        description = in.readString();
+    }
+
+    public static final Creator<Artist> CREATOR = new Creator<Artist>() {
+        @Override
+        public Artist createFromParcel(Parcel in) {
+            return new Artist(in);
+        }
+
+        @Override
+        public Artist[] newArray(int size) {
+            return new Artist[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeString(name);
+        dest.writeStringArray(genres);
+        dest.writeString(link);
+        dest.writeInt(tracks);
+        dest.writeInt(albums);
+        dest.writeString(description);
     }
 
     public static class Cover {

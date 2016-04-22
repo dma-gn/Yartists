@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ArtistViewHolder>  {
+public class ArtistsRecyclerViewAdapter extends RecyclerView.Adapter<ArtistsRecyclerViewAdapter.ArtistViewHolder>  {
 
     public static class ArtistViewHolder extends RecyclerView.ViewHolder implements android.view.View.OnClickListener, android.view.View.OnLongClickListener {
 
@@ -86,7 +86,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ArtistViewHolder> 
         return artists;
     }
 
-    public RVAdapter(Context context){
+    public ArtistsRecyclerViewAdapter(Context context){
         this.context = context;
     }
 
