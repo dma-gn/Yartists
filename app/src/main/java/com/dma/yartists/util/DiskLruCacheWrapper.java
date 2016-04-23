@@ -69,7 +69,7 @@ public class DiskLruCacheWrapper {
                 DiskLruCache.Editor editor = null;
                 try {
                     editor = mDiskLruCache.edit(key);
-                    OutputStream out = new BufferedOutputStream(editor.newOutputStream(0), ApplicationConstants.CACHE_DISK_SIZE);
+                    OutputStream out = new BufferedOutputStream(editor.newOutputStream(0), ApplicationConstants.CACHE_DISK_SIZE.intValue());
                     byte[] buf = new byte[1024];
                     int len;
                     while((len=inputStream.read(buf)) != -1){
@@ -135,7 +135,7 @@ public class DiskLruCacheWrapper {
             throws IOException {
         OutputStream out = null;
         try {
-            out = new BufferedOutputStream(editor.newOutputStream(VALUE_IDX), ApplicationConstants.CACHE_DISK_SIZE);
+            out = new BufferedOutputStream(editor.newOutputStream(VALUE_IDX), ApplicationConstants.CACHE_DISK_SIZE.intValue());
             return bitmap.compress(Bitmap.CompressFormat.JPEG, 70, out);
         } finally {
             if ( out != null ) {

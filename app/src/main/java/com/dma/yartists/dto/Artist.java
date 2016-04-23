@@ -24,6 +24,7 @@ public class Artist implements Parcelable {
         tracks = in.readInt();
         albums = in.readInt();
         description = in.readString();
+        cover = in.readParcelable(Cover.class.getClassLoader());
     }
 
     public static final Creator<Artist> CREATOR = new Creator<Artist>() {
@@ -52,9 +53,10 @@ public class Artist implements Parcelable {
         dest.writeInt(tracks);
         dest.writeInt(albums);
         dest.writeString(description);
+        dest.writeParcelable(cover, flags);
     }
 
-    public static class Cover {
+    public static class Cover  implements Parcelable {
         private String small;
         private String big;
 
@@ -64,6 +66,23 @@ public class Artist implements Parcelable {
             this.small = small;
             this.big = big;
         }
+
+        protected Cover(Parcel in) {
+            small = in.readString();
+            big = in.readString();
+        }
+
+        public static final Creator<Cover> CREATOR = new Creator<Cover>() {
+            @Override
+            public Cover createFromParcel(Parcel in) {
+                return new Cover(in);
+            }
+
+            @Override
+            public Cover[] newArray(int size) {
+                return new Cover[size];
+            }
+        };
 
         public String getSmall() {
             return small;
@@ -79,6 +98,17 @@ public class Artist implements Parcelable {
 
         public void setBig(String big) {
             this.big = big;
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(small);
+            dest.writeString(big);
         }
     }
 

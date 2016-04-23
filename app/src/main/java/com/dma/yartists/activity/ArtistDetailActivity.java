@@ -21,19 +21,15 @@ public class ArtistDetailActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private List<Artist> artists = new ArrayList<>();
 
-    private ArtistsFragmentPagerAdapter pagerAdapter;
-
-    private ViewPager viewPager;
-
     private int rvPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(LAYOUT);
-        artists = MainActivity.artists;
         Intent intent = getIntent();
         rvPosition = intent.getIntExtra(ApplicationConstants.POSITION,0);
+        artists = intent.getParcelableArrayListExtra("artists");
         initializeToolBar(artists.get(rvPosition).getName());
         initializeFragment();
 
@@ -53,15 +49,14 @@ public class ArtistDetailActivity extends AppCompatActivity {
     }
 
     private void initializeFragment() {
-        pagerAdapter = new ArtistsFragmentPagerAdapter(getSupportFragmentManager(),artists);
-        viewPager = (ViewPager) findViewById(R.id.container);
+        ArtistsFragmentPagerAdapter  pagerAdapter = new ArtistsFragmentPagerAdapter(getSupportFragmentManager(),artists);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.container);
         viewPager.setAdapter(pagerAdapter);
         viewPager.setCurrentItem(rvPosition);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
 
             @Override
@@ -72,7 +67,6 @@ public class ArtistDetailActivity extends AppCompatActivity {
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
     }

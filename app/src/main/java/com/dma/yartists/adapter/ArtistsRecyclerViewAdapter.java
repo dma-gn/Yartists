@@ -3,6 +3,7 @@ package com.dma.yartists.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Parcelable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.dma.yartists.R;
 import com.dma.yartists.activity.ArtistDetailActivity;
+import com.dma.yartists.activity.MainActivity;
 import com.dma.yartists.dto.Artist;
 import com.dma.yartists.task.DownloadImageTask;
 import com.dma.yartists.util.ApplicationConstants;
@@ -35,6 +37,7 @@ public class ArtistsRecyclerViewAdapter extends RecyclerView.Adapter<ArtistsRecy
 
         int position;
         Artist artist;
+        List<Artist> artists = new ArrayList<>();
 
         public void setPosition(int position) {
             this.position = position;
@@ -42,6 +45,10 @@ public class ArtistsRecyclerViewAdapter extends RecyclerView.Adapter<ArtistsRecy
 
         public void setArtist(Artist artist) {
             this.artist = artist;
+        }
+
+        public void setArtists(List<Artist> artists) {
+            this.artists = artists;
         }
 
         ArtistViewHolder(View itemView, Context context) {
@@ -54,13 +61,15 @@ public class ArtistsRecyclerViewAdapter extends RecyclerView.Adapter<ArtistsRecy
             artistDescription = (TextView)itemView.findViewById(R.id.artist_albums_and_tracks);
 
             itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(ctx, ArtistDetailActivity.class);
             intent.putExtra(ApplicationConstants.POSITION, position);
-
+            ArrayList<Artist> artistArrayList = new ArrayList<>(artists);
+            intent.putParcelableArrayListExtra("artists", artistArrayList);
             ctx.startActivity(intent);
         }
 
@@ -105,6 +114,7 @@ public class ArtistsRecyclerViewAdapter extends RecyclerView.Adapter<ArtistsRecy
     public void onBindViewHolder(ArtistViewHolder artistViewHolder, int i) {
         artistViewHolder.setArtist(artists.get(i));
         artistViewHolder.setPosition(i);
+        artistViewHolder.setArtists(artists);
         artistViewHolder.artistName.setText(artists.get(i).getName());
 
         String albums = artists.get(i).getAlbums() + " " +
@@ -121,7 +131,8 @@ public class ArtistsRecyclerViewAdapter extends RecyclerView.Adapter<ArtistsRecy
         artistViewHolder.artistGenres.setText(artists.get(i).implode(artists.get(i).getGenres()));
 
         String cacheFileName = ApplicationConstants.THUMB_PREFIX + String.valueOf(artists.get(i).getId());
-        new DownloadImageTask(artistViewHolder.artistPhoto, cacheFileName).execute(artists.get(i).getCover().getSmall());
+        new DownloadImageTask(context,artistViewHolder.artistPhoto, cacheFileName).execute(artists.get(i).getCover().getSmall());
+
     }
 
     @Override

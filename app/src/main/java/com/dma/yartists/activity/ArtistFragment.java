@@ -49,10 +49,10 @@ public class ArtistFragment extends Fragment {
                         R.string.item_tracks_singular,R.string.item_tracks_plural,
                         R.string.item_tracks_plural_perfect));
 
-        textViewArtistAlbumsAndTracks.setText(albums + " - " + tracks);
+        textViewArtistAlbumsAndTracks.setText(albums + " • " + tracks);
         textViewArtistGenres.setText(artist.implode(artist.getGenres()));
         textViewArtistDescription.setText(artist.getDescription());
-        new DownloadImageTask(imageViewArtistPhoto,String.valueOf(artist.getId())).execute(artist.getCover().getBig());
+        new DownloadImageTask(getContext(), imageViewArtistPhoto,String.valueOf(artist.getId())).execute(artist.getCover().getBig());
 
         return rootView;
     }

@@ -6,7 +6,7 @@ public class ApplicationConstants {
 
     public static final int MAX_MEMORY = (int) (Runtime.getRuntime().maxMemory() / 1024*4);
     public static final int MEM_CACHE_SIZE = MAX_MEMORY / 4;
-    public static final long CACHE_DISK_SIZE = 1024 * 1024 * 50;
+    public static final Long CACHE_DISK_SIZE = 1024 * 1024 * 50L;
 
     public static final String THUMB_PREFIX = "thumb_";
 

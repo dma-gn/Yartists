@@ -1,15 +1,20 @@
 <resources>
-    <string name="app_name">Яндекс.Исполнители</string>
+    <string name="app_name">Yandex.Artists</string>
 
-    <string name="artists">Исполнители</string>
-    <string name="biography">Биография</string>
-    <string name="loading_title">Запрашиваем данные</string>
-    <string name="loading_content">Пожалуйста подождите...</string>
+    <string name="artists">Artists</string>
+    <string name="biography">Biography</string>
+    <string name="loading_title">Loading data</string>
+    <string name="loading_content">Please waiting&#8230;&#8230;&#8230;</string>
 
-    <string name="item_albums_singular">альбом</string>
-    <string name="item_albums_plural">альбома</string>
-    <string name="item_albums_plural_perfect">альбомов</string>
-    <string name="item_tracks_singular">песеня</string>
-    <string name="item_tracks_plural">песени</string>
-    <string name="item_tracks_plural_perfect">песен</string>
+    <string name="item_albums_singular">album</string>
+    <string name="item_albums_plural">albums</string>
+    <string name="item_albums_plural_perfect">albums</string>
+    <string name="item_tracks_singular">track</string>
+    <string name="item_tracks_plural">tracks</string>
+    <string name="item_tracks_plural_perfect">tracks</string>
+
+    <string name="unable_to_connection">Unable to connection the internet</string>
+    <string name="connect_exception">Unable to get data, please check the internet connection</string>
+    <string name="unknow_host_exception"> Unable to resolve host, please check DNS settings and internet connection</string>
+    <string name="can_not_download_photo">Unable to upload a photo</string>
 </resources>

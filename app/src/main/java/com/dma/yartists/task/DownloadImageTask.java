@@ -1,23 +1,26 @@
 package com.dma.yartists.task;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.support.v4.util.LruCache;
-import android.util.Log;
 import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.dma.yartists.R;
 import com.dma.yartists.activity.MainActivity;
 import com.dma.yartists.util.ApplicationConstants;
 import com.dma.yartists.util.DiskLruCacheWrapper;
-import com.jakewharton.disklrucache.DiskLruCache;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 
 public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+    private Context ctx;
     private ImageView bmImage;
     private String name;
     private final WeakReference<ImageView> imageViewReference;
@@ -29,19 +32,13 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         }
     };
 
-    private static DiskLruCache mDiskLruCache = MainActivity.mDiskLruCache;
-    private static Object mDiskCacheLock = MainActivity.mDiskCacheLock;
-    private static boolean mDiskCacheStarting = MainActivity.mDiskCacheStarting;
-
     private static DiskLruCacheWrapper diskLruCacheWrapper = MainActivity.diskLruCacheWrapper;
 
-    public DownloadImageTask(ImageView bmImage, String name) {
-        mDiskLruCache = MainActivity.mDiskLruCache;
-        mDiskCacheLock = MainActivity.mDiskCacheLock;
-        mDiskCacheStarting = MainActivity.mDiskCacheStarting;
+    public DownloadImageTask(Context ctx, ImageView bmImage, String name) {
         imageViewReference = new WeakReference<ImageView>(bmImage);
         this.bmImage = bmImage;
         this.name = name;
+        this.ctx = ctx;
     }
 
     @Override
@@ -55,8 +52,13 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
                 mIcon = BitmapFactory.decodeStream(in);
                 addBitmapToCache(String.valueOf(name), mIcon);
             }
-        } catch (Exception e) {
-            Log.e("Error", e.getMessage());
+        }catch (IOException e){
+            Handler handler =  new Handler(ctx.getMainLooper());
+            handler.post( new Runnable(){
+                public void run(){
+                    Toast.makeText(ctx, ctx.getString(R.string.can_not_download_photo),Toast.LENGTH_SHORT).show();
+                }
+            });
             e.printStackTrace();
         }
         return mIcon;

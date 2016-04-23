@@ -13,19 +13,18 @@ import android.widget.Toast;
 
 import com.dma.yartists.R;
 import com.dma.yartists.adapter.ArtistsRecyclerViewAdapter;
+import com.dma.yartists.api.ArtistApi;
 import com.dma.yartists.dto.Artist;
 import com.dma.yartists.util.ApplicationConstants;
 import com.dma.yartists.util.DiskLruCacheWrapper;
 import com.dma.yartists.util.Utils;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jakewharton.disklrucache.DiskLruCache;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
+import java.net.ConnectException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
@@ -42,12 +41,8 @@ public class MainActivity extends AppCompatActivity {
     private ProgressDialog loading;
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    public static DiskLruCache mDiskLruCache;
-    public static final Object mDiskCacheLock = new Object();
-    public static boolean mDiskCacheStarting = true;
     public static DiskLruCacheWrapper diskLruCacheWrapper;
-
-    public static List<Artist> artists = new ArrayList<>();
+    private List<Artist> artists = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,27 +90,24 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected List<Artist> doInBackground(Void... params) {
-            try{
-                ObjectMapper mapper = new ObjectMapper();
-                Artist[] list = new Artist[]{};
-                InputStream artistsInputStream = null;
-
-                artistsInputStream = diskLruCacheWrapper.getInputStreamFromDiskCache("artists");
-                if(artistsInputStream == null){
-                    artistsInputStream = new URL(ApplicationConstants.URL_ARTISTS).openStream();
-                    list = mapper.readValue(artistsInputStream, Artist[].class);
-                    diskLruCacheWrapper.addInputStreamToDiskCache("artists",
-                            new URL(ApplicationConstants.URL_ARTISTS).openStream());
-                }else{
-                    list = mapper.readValue(artistsInputStream, Artist[].class);
-                }
-                artistsInputStream.close();
-
-                artists = Arrays.asList(list);
-            }catch (IOException e){
-                toast.setText(e.getMessage());
+            ArtistApi artistApi = new ArtistApi();
+            if(!artistApi.isConnect(getBaseContext())) {
+                toast.setText(R.string.unable_to_connection);
                 toast.show();
-                e.printStackTrace();
+                return artists;
+            }
+
+            try {
+                artists = artistApi.getArtists();
+            } catch (ConnectException e) {
+                toast.setText(R.string.connect_exception);
+                toast.show();
+            } catch (UnknownHostException e) {
+                toast.setText(R.string.unknow_host_exception);
+                toast.show();
+            }catch (IOException e){
+                toast.setText(R.string.connect_exception);
+                toast.show();
             }
 
             return artists;
