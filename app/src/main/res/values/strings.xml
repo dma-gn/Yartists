@@ -5,6 +5,7 @@
     <string name="biography">Biography</string>
     <string name="loading_title">Loading data</string>
     <string name="loading_content">Please waiting&#8230;&#8230;&#8230;</string>
+    <string name="no_available_data">No available data</string>
 
     <string name="item_albums_singular">album</string>
     <string name="item_albums_plural">albums</string>

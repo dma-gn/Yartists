@@ -6,6 +6,7 @@
     <string name="biography">Биография</string>
     <string name="loading_title">Запрашиваем данные</string>
     <string name="loading_content">Пожалуйста подождите&#8230;&#8230;&#8230;</string>
+    <string name="no_available_data">Нет данных</string>
 
     <string name="item_albums_singular">альбом</string>
     <string name="item_albums_plural">альбома</string>

@@ -8,8 +8,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.view.animation.OvershootInterpolator;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewSwitcher;
 
 import com.dma.yartists.R;
 import com.dma.yartists.adapter.ArtistsRecyclerViewAdapter;
@@ -37,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private ArtistsRecyclerViewAdapter adapter;
     public static RecyclerView recyclerView;
+    private TextView emptyTextView;
+    private ViewSwitcher viewSwitcher;
     private Toast toast;
     private ProgressDialog loading;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -69,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void initializeRecyclerView() {
         recyclerView =(RecyclerView)findViewById(R.id.rv);
+        emptyTextView = (TextView) findViewById(R.id.empty_text_view);
+        viewSwitcher = (ViewSwitcher) findViewById(R.id.switcher);
 
         LinearLayoutManager llm = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(llm);
@@ -115,6 +122,12 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<Artist> artists) {
+            if ((artists.isEmpty() || artists.size() == 0) &&
+                    R.id.empty_text_view == viewSwitcher.getNextView().getId()) {
+                viewSwitcher.showNext();
+            }else if(R.id.rv == viewSwitcher.getNextView().getId()){
+                    viewSwitcher.showNext();
+            }
             adapter.notifyItemRangeChanged(0, adapter.getArtists().size());
             adapter.setArtists(artists);
             adapter.notifyDataSetChanged();
