@@ -9,6 +9,7 @@ import com.dma.yartists.dto.Artist;
 
 import java.util.List;
 
+//Адаптер переключения страниц фрагментов
 public class ArtistsFragmentPagerAdapter extends FragmentPagerAdapter {
 
     private List<Artist> artists;
@@ -20,7 +21,8 @@ public class ArtistsFragmentPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return ArtistFragment.newInstance( artists.get(position));
+        //создаем инстанс фрагмента по позиции листа
+        return ArtistFragment.newInstance(artists.get(position));
     }
 
     @Override

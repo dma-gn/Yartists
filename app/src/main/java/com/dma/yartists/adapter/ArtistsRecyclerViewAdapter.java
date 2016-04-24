@@ -3,7 +3,6 @@ package com.dma.yartists.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Parcelable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,7 +13,6 @@ import android.widget.TextView;
 
 import com.dma.yartists.R;
 import com.dma.yartists.activity.ArtistDetailActivity;
-import com.dma.yartists.activity.MainActivity;
 import com.dma.yartists.dto.Artist;
 import com.dma.yartists.task.DownloadImageTask;
 import com.dma.yartists.util.ApplicationConstants;
@@ -66,19 +64,23 @@ public class ArtistsRecyclerViewAdapter extends RecyclerView.Adapter<ArtistsRecy
 
         @Override
         public void onClick(View v) {
+            //передаем намерение в другое экран с детализацией исполнителя(позицию и лист с артистами)
             Intent intent = new Intent(ctx, ArtistDetailActivity.class);
             intent.putExtra(ApplicationConstants.POSITION, position);
             ArrayList<Artist> artistArrayList = new ArrayList<>(artists);
-            intent.putParcelableArrayListExtra("artists", artistArrayList);
+            intent.putParcelableArrayListExtra(ApplicationConstants.ARTISTS, artistArrayList);
             ctx.startActivity(intent);
         }
 
         @Override
         public boolean onLongClick(View v) {
-            Intent viewIntent =
-                    new Intent("android.intent.action.VIEW",
-                            Uri.parse(artist.getLink()));
-            ctx.startActivity(viewIntent);
+            //намерение при долгом нажатии, переходит к исполнителю на страницу
+            if(artist.getLink() != null) {
+                Intent viewIntent =
+                        new Intent("android.intent.action.VIEW",
+                                Uri.parse(artist.getLink()));
+                ctx.startActivity(viewIntent);
+            }
             return true;
         }
     }
@@ -112,11 +114,12 @@ public class ArtistsRecyclerViewAdapter extends RecyclerView.Adapter<ArtistsRecy
 
     @Override
     public void onBindViewHolder(ArtistViewHolder artistViewHolder, int i) {
+        //Собираем элеметы листа
         artistViewHolder.setArtist(artists.get(i));
         artistViewHolder.setPosition(i);
         artistViewHolder.setArtists(artists);
         artistViewHolder.artistName.setText(artists.get(i).getName());
-
+        //Определяем форму существительных
         String albums = artists.get(i).getAlbums() + " " +
                 context.getString(new Utils().pluralize(artists.get(i).getAlbums(),
                         R.string.item_albums_singular,R.string.item_albums_plural,
@@ -129,10 +132,9 @@ public class ArtistsRecyclerViewAdapter extends RecyclerView.Adapter<ArtistsRecy
 
         artistViewHolder.artistDescription.setText(albums + ", " + tracks);
         artistViewHolder.artistGenres.setText(artists.get(i).implode(artists.get(i).getGenres()));
-
+        //Определяем префикс для изображений которые будут лежать в кеше и запускаем задачу
         String cacheFileName = ApplicationConstants.THUMB_PREFIX + String.valueOf(artists.get(i).getId());
         new DownloadImageTask(context,artistViewHolder.artistPhoto, cacheFileName).execute(artists.get(i).getCover().getSmall());
-
     }
 
     @Override

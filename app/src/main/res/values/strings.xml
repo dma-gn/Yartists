@@ -4,7 +4,7 @@
     <string name="artists">Artists</string>
     <string name="biography">Biography</string>
     <string name="loading_title">Loading data</string>
-    <string name="loading_content">Please waiting&#8230;&#8230;&#8230;</string>
+    <string name="loading_content">Please waiting&#8230;</string>
     <string name="no_available_data">No available data</string>
 
     <string name="item_albums_singular">album</string>
@@ -17,5 +17,6 @@
     <string name="unable_to_connection">Unable to connection the internet</string>
     <string name="connect_exception">Unable to get data, please check the internet connection</string>
     <string name="unknow_host_exception"> Unable to resolve host, please check DNS settings and internet connection</string>
+    <string name="clear_cache_exception">Having some trouble clearing cache, please try again or clearing cache manually</string>
     <string name="can_not_download_photo">Unable to upload a photo</string>
 </resources>

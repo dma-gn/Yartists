@@ -5,7 +5,7 @@
     <string name="artists">Исполнители</string>
     <string name="biography">Биография</string>
     <string name="loading_title">Запрашиваем данные</string>
-    <string name="loading_content">Пожалуйста подождите&#8230;&#8230;&#8230;</string>
+    <string name="loading_content">Пожалуйста подождите&#8230;</string>
     <string name="no_available_data">Нет данных</string>
 
     <string name="item_albums_singular">альбом</string>
@@ -18,5 +18,6 @@
     <string name="unable_to_connection">Невозможно подключиться к интернету</string>
     <string name="connect_exception">Невозможно получить данные, пожалуйста проверьте подключение к интернету</string>
     <string name="unknow_host_exception">Невозможно поределить имя хоста, пожалуйста проверьте DNS и подключение к интернету</string>
+    <string name="clear_cache_exception">Возникли проблемы при очистке кеша, пожалуйста попробуйте ещё раз или очистите кеш вручную</string>
     <string name="can_not_download_photo">Невозможно зугрузить фотографию</string>
 </resources>

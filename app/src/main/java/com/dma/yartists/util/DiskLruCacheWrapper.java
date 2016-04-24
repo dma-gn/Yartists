@@ -11,7 +11,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
+/*
+* Класс обертка для кеширования на диск
+* */
 public class DiskLruCacheWrapper {
     private static final int VALUE_IDX = 0;
     private File cacheDir;
@@ -49,6 +51,15 @@ public class DiskLruCacheWrapper {
         new InitDiskCacheTask().execute(cacheDir);
     }
 
+    //метод очистки кеша
+    public void clearDiskCache() throws IOException{
+        File dir = mDiskLruCache.getDirectory();
+        long maxSize = mDiskLruCache.getMaxSize();
+        mDiskLruCache.delete();
+        mDiskLruCache = DiskLruCache.open(dir, ApplicationConstants.VERSION, 1, maxSize);
+    }
+
+    //метод получения потока с диска
     public InputStream getInputStreamFromDiskCache(String key) throws IOException {
         synchronized (mDiskCacheLock) {
             while (mDiskCacheStarting) {
@@ -56,20 +67,22 @@ public class DiskLruCacheWrapper {
                     mDiskCacheLock.wait();
                 } catch (InterruptedException e) {}
             }
-            if (mDiskLruCache != null && mDiskLruCache.size() != 0 && mDiskLruCache.get("artists") != null) {
-                return mDiskLruCache.get("artists").getInputStream(0);
+            if (mDiskLruCache != null && mDiskLruCache.size() != 0 && mDiskLruCache.get(key) != null) {
+                return mDiskLruCache.get(key).getInputStream(VALUE_IDX);
             }
         }
         return null;
     }
 
+    //Метод добавления потока на диск
     public void addInputStreamToDiskCache(String key, InputStream inputStream) throws IOException {
         synchronized (mDiskCacheLock) {
             if (mDiskLruCache != null && mDiskLruCache.get(key) == null) {
                 DiskLruCache.Editor editor = null;
                 try {
                     editor = mDiskLruCache.edit(key);
-                    OutputStream out = new BufferedOutputStream(editor.newOutputStream(0), ApplicationConstants.CACHE_DISK_SIZE.intValue());
+                    OutputStream out = new BufferedOutputStream(editor.newOutputStream(VALUE_IDX),
+                            ApplicationConstants.CACHE_DISK_SIZE.intValue());
                     byte[] buf = new byte[1024];
                     int len;
                     while((len=inputStream.read(buf)) != -1){
@@ -85,6 +98,7 @@ public class DiskLruCacheWrapper {
         }
     }
 
+    //Метод добавления изображения в кеш
     public void addBitmapToCache(String key, Bitmap bitmap) throws IOException {
         synchronized (mDiskCacheLock) {
             if (mDiskLruCache != null && mDiskLruCache.get(key) == null) {
@@ -113,6 +127,7 @@ public class DiskLruCacheWrapper {
         }
     }
 
+    //Метод получения изображения из кеша
     public Bitmap getBitmapFromDiskCache(String key) throws IOException {
         synchronized (mDiskCacheLock) {
             while (mDiskCacheStarting) {
@@ -131,6 +146,7 @@ public class DiskLruCacheWrapper {
         return null;
     }
 
+    //запись потока в кеш
     private boolean writeBitmapToFile(Bitmap bitmap, DiskLruCache.Editor editor)
             throws IOException {
         OutputStream out = null;

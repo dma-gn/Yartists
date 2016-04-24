@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 
+//Задача для скачивания изображений
 public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
     private Context ctx;
     private ImageView bmImage;
@@ -46,11 +47,16 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         String url = urls[0];
         Bitmap mIcon = null;
         try {
-            mIcon = getBitmapFromDiskCache(name);
+            //Если изображения нет в кеше диска, скачиваем его и добавляем в кеш
+            if(diskLruCacheWrapper != null){
+                mIcon = getBitmapFromDiskCache(name);
+            }
             if(mIcon == null) {
                 InputStream in = new java.net.URL(url).openStream();
                 mIcon = BitmapFactory.decodeStream(in);
-                addBitmapToCache(String.valueOf(name), mIcon);
+                if(diskLruCacheWrapper != null){
+                    addBitmapToCache(String.valueOf(name), mIcon);
+                }
             }
         }catch (IOException e){
             Handler handler =  new Handler(ctx.getMainLooper());
@@ -72,6 +78,7 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
                 bmImage.setImageBitmap(result);
             }
         }
+        //После получения изображения делаем анимацию по альфе от 0 до 1
         AlphaAnimation animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(1500);
         animation.setFillAfter(true);
@@ -88,6 +95,8 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         return mLruCache.get(key);
     }
 
+    //Добавляем в кеш ОЗУ, т.к. чтение из памяти быстрее и на диск, если приложение будет свернуто или
+    //прервано телефонным ра
     public void addBitmapToCache(String key, Bitmap bitmap) throws IOException {
         if (getBitmapFromMemCache(key) == null) {
             addBitmapToMemoryCache(key, bitmap);
@@ -96,6 +105,8 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
     }
 
     public Bitmap getBitmapFromDiskCache(String key) throws IOException {
+        //Для более высокой скорости получаем изображения из кеша памяти, если в памяти нет кеша изображения,
+        // получаем из диска
         return (getBitmapFromMemCache(key) == null) ?
                 diskLruCacheWrapper.getBitmapFromDiskCache(key) : getBitmapFromMemCache(key);
     }

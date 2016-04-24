@@ -28,20 +28,22 @@ public class ArtistDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(LAYOUT);
         Intent intent = getIntent();
+        //получаем переданные намерения
         rvPosition = intent.getIntExtra(ApplicationConstants.POSITION,0);
-        artists = intent.getParcelableArrayListExtra("artists");
+        artists = intent.getParcelableArrayListExtra(ApplicationConstants.ARTISTS);
         initializeToolBar(artists.get(rvPosition).getName());
         initializeFragment();
-
     }
 
     private void initializeToolBar(String title) {
+        //Инициализируем панель и подключаем слушатель на кнопку назад
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.mipmap.ic_keyboard_backspace);
         toolbar.setTitle(title);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //передаем в главный экран позицию на которой закончили просмотр
                 MainActivity.recyclerView.scrollToPosition(rvPosition);
                 finish();
             }
@@ -49,10 +51,13 @@ public class ArtistDetailActivity extends AppCompatActivity {
     }
 
     private void initializeFragment() {
-        ArtistsFragmentPagerAdapter  pagerAdapter = new ArtistsFragmentPagerAdapter(getSupportFragmentManager(),artists);
+        //инициализируем адаптер переключений страниц
+        ArtistsFragmentPagerAdapter pagerAdapter = new ArtistsFragmentPagerAdapter(getSupportFragmentManager(),artists);
         ViewPager viewPager = (ViewPager) findViewById(R.id.container);
         viewPager.setAdapter(pagerAdapter);
+        //переключаем на страницу фрагмента, который мы нажали в экране выбора исполнителей
         viewPager.setCurrentItem(rvPosition);
+        //подключаем слушатель переключения страниц фрагмента
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
@@ -61,6 +66,7 @@ public class ArtistDetailActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
+                //меняем имя артиста в панели и перезаписываем позицию
                 toolbar.setTitle(artists.get(position).getName());
                 rvPosition = position;
             }

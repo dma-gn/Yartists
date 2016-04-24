@@ -1,5 +1,6 @@
 package com.dma.yartists.util;
 
+//Класс констант для приложения
 public class ApplicationConstants {
 
     public static final int VERSION = 1;
@@ -13,5 +14,6 @@ public class ApplicationConstants {
     public static final String URL_ARTISTS = "http://download.cdn.yandex.net/mobilization-2016/artists.json";
 
     public static final String POSITION = "position";
+    public static final String ARTISTS = "artists";
     public static final String ARTIST_FRAGMENT_KEY = "artist";
 }

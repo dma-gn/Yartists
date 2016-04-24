@@ -21,6 +21,7 @@ public class ArtistFragment extends Fragment {
 
     public static ArtistFragment newInstance(Artist artist) {
         ArtistFragment fragment = new ArtistFragment();
+        //передаем в бандл артиста, чтобы можно было прочитать при создании вида
         Bundle args = new Bundle();
         args.putParcelable(ApplicationConstants.ARTIST_FRAGMENT_KEY,artist);
         fragment.setArguments(args);
@@ -30,6 +31,7 @@ public class ArtistFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        //Заполняем фрагмент данными из бандла
         Artist artist = getArguments().getParcelable(ApplicationConstants.ARTIST_FRAGMENT_KEY);
         View rootView = inflater.inflate(R.layout.fragment_artist_details, container, false);
 
